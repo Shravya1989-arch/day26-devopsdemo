@@ -1,0 +1,42 @@
+resource "azurerm_resource_group" "rg" {
+  name = var.rgname
+  location = var.location
+}
+
+module "ServicePrinciple" {
+  source = "../modules/ServicePrinciple"
+  sp_name = var.sp_name
+
+  depends_on = [ azurerm_resource_group.rg ]
+}
+
+resource "azurerm_role_assignment" "rolesn" {
+  scope = "/subscriptions/${var.SUB_ID}"
+  role_definition_name = "Contributor"
+  principal_id = module.ServicePrinciple.service_principal_object_id
+  depends_on = [module.ServicePrinciple]
+}
+
+module "keyvault" {
+  source                      = "../modules/keyvault"
+  keyvault_name               = var.keyvault_name
+  location                    = var.location
+  resource_group_name         = var.rgname
+  sp_name      = var.sp_name
+  service_principal_object_id = module.ServicePrincipal.service_principal_object_id
+  service_principal_tenant_id = module.ServicePrincipal.service_principal_tenant_id
+
+  depends_on = [
+    module.ServicePrincipal
+  ]
+}
+
+resource "azurerm_key_vault_secret" "example" {
+  name         = module.ServicePrincipal.client_id
+  value        = module.ServicePrincipal.client_secret
+  key_vault_id = module.keyvault.keyvault_id
+
+  depends_on = [
+    module.keyvault
+  ]
+}
