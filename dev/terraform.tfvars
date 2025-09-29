@@ -1,6 +1,6 @@
 rgname                 = "dev-shravya-rg"
 sp_name = "dev-shravya-spn"
 keyvault_name          = "dev-shravya-kv-101"
-SUB_ID = ""
+SUB_ID = "287af259-8e7d-4ff7-b511-52679e90db97"
 cluster_name = "dev-shravya-cluster"
 node_pool_name = "devnp"

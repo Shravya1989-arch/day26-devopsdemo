@@ -40,3 +40,23 @@ resource "azurerm_key_vault_secret" "example" {
     module.keyvault
   ]
 }
+
+module "aks" {
+
+  source = "../modules/aks/"
+  sp_name = var.sp_name
+  client_id = module.ServicePrinciple.client_id
+  client_secret = module.ServicePrinciple.client_secret
+  location = var.location
+  resource_group_name = var.rgname
+  cluster_name = var.cluster_name
+  node_pool_name = var.node_pool_name
+  
+  depends_on = [ module.ServicePrinciple ]
+}
+
+resource "local_file" "kubeconfig" {
+  depends_on   = [module.aks]
+  filename     = "./kubeconfig"
+  content      = module.aks.config
+}

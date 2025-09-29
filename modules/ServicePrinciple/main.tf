@@ -7,9 +7,9 @@ resource "azuread_application" "main" {
 
 resource "azuread_service_principal" "main" {
     app_role_assignment_required = true
-    application_id = azuread_application.main.application_id
+    //application_id = azuread_application.main.application_id
+    client_id = azuread_application.main.client_id
     depends_on = [azuread_application.main]
-
 }
 
 resource "azuread_service_principal_password" "main" {
