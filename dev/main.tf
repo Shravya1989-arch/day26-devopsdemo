@@ -3,8 +3,8 @@ resource "azurerm_resource_group" "rg" {
   location = var.location
 }
 
-module "ServicePrinciple" {
-  source = "../modules/ServicePrinciple"
+module "ServicePrincipal" {
+  source = "../modules/ServicePrincipal"
   sp_name = var.sp_name
 
   depends_on = [ azurerm_resource_group.rg ]
@@ -13,8 +13,8 @@ module "ServicePrinciple" {
 resource "azurerm_role_assignment" "rolesn" {
   scope = "/subscriptions/${var.SUB_ID}"
   role_definition_name = "Contributor"
-  principal_id = module.ServicePrinciple.service_principal_object_id
-  depends_on = [module.ServicePrinciple]
+  principal_id = module.ServicePrincipal.service_principal_object_id
+  depends_on = [module.ServicePrincipal]
 }
 
 module "keyvault" {
@@ -45,14 +45,14 @@ module "aks" {
 
   source = "../modules/aks/"
   sp_name = var.sp_name
-  client_id = module.ServicePrinciple.client_id
-  client_secret = module.ServicePrinciple.client_secret
+  client_id = module.ServicePrincipal.client_id
+  client_secret = module.ServicePrincipal.client_secret
   location = var.location
   resource_group_name = var.rgname
   cluster_name = var.cluster_name
   node_pool_name = var.node_pool_name
   
-  depends_on = [ module.ServicePrinciple ]
+  depends_on = [ module.ServicePrincipal ]
 }
 
 resource "local_file" "kubeconfig" {

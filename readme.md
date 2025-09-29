@@ -1,4 +1,4 @@
-1. Provision aks, key vault, (entra id) serviceprinciple ,with contributor role using tf and azure devops
+1. Provision aks, key vault, (entra id) ServicePrincipal ,with contributor role using tf and azure devops
 2. Basically when the devops commits the code, the build pipeline will be triggered (which has code analysis, code verification, unit and integration testing ) to provision the azure  env via terraform as IAC
 3. When you merge code to the feature branch and then its merged to the main branch, the DEV deployment is triggered. Env is provision with AKS for dev cluster, key vault for dev cluster and sp for dev cluster. It use seperate state file (DEV)
 4. For stage you have seperate tf state file which resides in seperate storage account
